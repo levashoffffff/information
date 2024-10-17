@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messanger</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+
+        <h3>Сообщение</h3>
+        <form action="" id="add-msg-form" class="mb-3">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="name-inp" placeholder="Имя">
+            </div>
+            <div class="mb-3">
+                <textarea id="msg-inp" class="form-control" rows="4" cols="30" placeholder="Сообщение"></textarea>
+            </div>
+            <div class="mb-3">
+                <button id="send-btn" class="btn btn-primary">Отправить</button>
+            </div>
+        </form>
+
+        <!--Место куда помещаются сообщения-->
+        <ul id="msg-list" class="list-group">
+            <!-- <li class="list-group-item">
+                <h2>Имя</h2>
+                <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt voluptatum dignissimos
+                    consequatur quos dolore, eos deleniti temporibus suscipit dolorem omnis totam in.</p>
+            </li> -->
+        </ul>
+    </div>
+
+
+
+    <script>
+
+        //Получаем данные из localStorage
+        let data = localStorage.getItem('msgList');
+        //В массиве будем хранить список сообщений
+        let msgList = [];
+        //Проверяем переменную data на отсутствие данных
+        if(data !== "" && data !== null) {
+            msgList = JSON.parse(data);
+            console.log(msgList);
+        }
+
+        //Функция создающая блоки
+        function createNewMsg(obj) {
+            const itemMsg = document.createElement('li');
+            itemMsg.classList.add('list-group-item');
+
+            const itemTitle = document.createElement('h2');
+            itemTitle.textContent = obj.name;
+
+            const itemText = document.createElement('p');
+            itemText.classList.add('lead');
+            itemText.textContent = obj.msg;
+
+            itemMsg.append(itemTitle);
+            itemMsg.append(itemText);
+
+            document.getElementById('msg-list').append(itemMsg); 
+        }
+
+        for(let msg of msgList) {
+            createNewMsg(msg);
+        }
+
+        //Создаем обработчик события, который реагирует на нажатие кнопки отправить
+        document.getElementById('add-msg-form').addEventListener('submit', function(event){
+            //Отменяем привычное действия формы. При нажатии на кнопку отправить данные
+            //отправляются по адресу который указан в атрибуте action даже если он пустой
+            event.preventDefault();
+
+            //Получаем текстовые значение из текстовых полей
+            let userName = document.getElementById('name-inp').value;
+            let msg = document.getElementById('msg-inp').value;
+
+            //Создаем объект данных
+            let msgObj = {
+                name: userName,
+                msg: msg
+            }
+
+            //Добавляем объект в пока еще пустой массив. При повторной отправке сохранится
+            //второе сообщение
+            msgList.push(msgObj);
+
+            localStorage.setItem('msgList', JSON.stringify(msgList));
+
+            createNewMsg(msgObj);
+
+            //Очищаем текстовые поля после каждого нажатия на кнопку отправить
+            document.getElementById('name-inp').value = "";
+            document.getElementById('msg-inp').value = ""
+        })
+
+        /* localStorage.setItem('name', 'Илья');
+        localStorage.setItem('age', 12);
+        //Мы не можем хранить объекты
+        // localStorage.setItem('age', {name: vasya})
+
+        //Мы можем хранить данные в виде строки
+        localStorage.setItem('data', JSON.stringify(msgObj))
+        console.log(localStorage.getItem("name")); */
+    </script>
+</body>
+
+</html>
