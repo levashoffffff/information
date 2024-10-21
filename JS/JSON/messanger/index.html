@@ -55,7 +55,7 @@
             itemMsg.classList.add('list-group-item');
 
             const itemTitle = document.createElement('h2');
-            itemTitle.textContent = obj.name;
+            itemTitle.textContent = obj.name; 
 
             const itemText = document.createElement('p');
             itemText.classList.add('lead');
@@ -91,13 +91,14 @@
             //второе сообщение
             msgList.push(msgObj);
 
+            //Сохраняем массив данныв в localStorage, но перед отправкой преобразуем в строку json
             localStorage.setItem('msgList', JSON.stringify(msgList));
 
             createNewMsg(msgObj);
 
             //Очищаем текстовые поля после каждого нажатия на кнопку отправить
             document.getElementById('name-inp').value = "";
-            document.getElementById('msg-inp').value = ""
+            document.getElementById('msg-inp').value = "";
         })
 
         /* localStorage.setItem('name', 'Илья');
