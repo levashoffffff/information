@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .out-1, .out-2, .out-3, .out-4 {
+            padding: 20px 0px;
+            border-top: 1px dashed #000;
+            border-bottom: 1px dashed #000;
+            margin: 5px 0px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="out-1"></div>
+    <div class="out-2"></div>
+    <div class="out-3"></div>
+    <div class="out-4">
+        <input type="text" class="i-4">
+        <button class="b-4">Отправить</button>
+    </div>
+
+    <script>
+        const arr1 = [7, 4, 5, 6, 8];
+        const out1 = document.querySelector('.out-1');
+        const out2 = document.querySelector('.out-2');
+        const out3 = document.querySelector('.out-3');
+
+        function f1(arr, myFunc, block) {
+            arr[3] = arr[3] * 2;
+            //out1.innerHTML = arr1;
+            myFunc(arr, block);
+        }
+
+        //Сделали функцию callback
+        function showArr(arr, block) {
+            let out = '';
+            for(let i = 0; i < arr1.length; i++) {
+                out += arr[i] + '_';
+            }
+            block.innerHTML = out;
+        }
+
+                //Сделали функцию callback 2
+        function showArr2(arr, block) {
+            let out = '';
+            for(let i = 0; i < arr1.length; i++) {
+                out += arr[i] + '*';
+            }
+            block.innerHTML = out;
+        }
+
+        //Функция выполняет действие над указанным массивом arr1, выводит через указанную функцию showArr в указанный блок out
+        f1(arr1, showArr, out1);
+        f1(arr1, showArr2, out2);
+
+
+        // пример колбэка
+        function squad(item) {
+            return item**2;
+        }
+
+        //const arr2 = arr1.map(squad);
+
+        //Стрелочная функция callback
+        const arr2 = arr1.map((item) => item**2);
+        console.log(arr2);
+        showArr(arr2, out3);
+
+        //Пример с input с фиксированным вызовом функции
+        /* document.querySelector('.b-4').addEventListener('click', getUserName);
+        function getUserName() {
+            const userName = document.querySelector('.i-4').value;
+            console.log(fixUserName(userName));
+        }
+
+        function fixUserName(str) {
+            return str.trim().toLowerCase();
+        } */
+
+        //Пример с input используя функцию callback
+        document.querySelector('.b-4').addEventListener('click', ()=>{
+            getUserName(fixUserName)
+        });
+
+        function getUserName(fixFunc) {
+            const userName = document.querySelector('.i-4').value;
+            console.log(fixFunc(userName));
+        }
+
+        function fixUserName(str) {
+            return str.trim().toLowerCase();
+        }
+
+
+        //асинхронные callback функции
+        async function pageLoader(callback) {
+            const data = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+            callback(data);
+        }
+
+        function getAJAX(data) {
+            console.log('Послал запрос');
+            console.log('Ответ сервера');
+            console.log(data);
+        }
+
+        pageLoader(getAJAX);
+
+    </script>
+</body>
+</html>
