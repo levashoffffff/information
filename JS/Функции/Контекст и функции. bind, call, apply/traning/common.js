@@ -4,8 +4,7 @@
 let count = 0;
 //--------------------------------------
 
-/* let count = 0;
-function f1() {
+/*function f1() {
     console.log(count);
     console.log(this);
     this.textContent = count;
@@ -13,6 +12,7 @@ function f1() {
 } 
 
 document.querySelector('.b-1').addEventListener('click', f1);
+
 
 //стрелочные функции не имеют this
 const f2 = () => {
@@ -134,7 +134,7 @@ document.querySelector('.b-8').addEventListener('click', () => {
 
 //-----------------------------
 
-//Вытягивание методов
+/* //Вытягивание методов
 
 const validate = {
     password: 'himahai',
@@ -153,4 +153,55 @@ const obj = {password: 'hello'};
 //Вытянул метод sayHi и перенес в obj
 const validatePassword = validate.sayHi.bind(obj);
 
-console.log(validatePassword());
+console.log(validatePassword()); */
+
+//--------------------------------------------
+
+//---------------Кэширование функции----------------
+
+/* Создайте декоратор spy(func), который должен возвращать обёртку, которая сохраняет все вызовы функции в своём свойстве calls.
+
+Каждый вызов должен сохраняться как массив аргументов. */
+
+
+
+function work(a, b) {
+    return a + b;
+  }
+
+function spy(func) {
+    let calls = new Map();
+    return function(x, y) {
+        let str_key = `${x},${y}`;
+        if (calls.has(str_key)) {
+            console.log("Данные из кэш");
+            return calls.get(str_key);
+        }
+        //В данном случае вызывается просто функция slow из параметра func. Но эта функция не понимает откуда брать this, ведь она вызвана не из объекта. Поэтому используем call для привязки к контексту. В this попадет объект worker, т.к. на 189 строке функция вызывается из объекта worker.
+        let result = func(x, y);  // теперь 'this' передаётся правильно
+        calls.set(str_key, result);
+        return result;
+      };
+} 
+  
+  work = spy(work);
+  
+console.log(work(1, 2));
+console.log(work(4, 5)); 
+
+console.log(work(1, 2));
+console.log(work(4, 5));
+
+  
+/*   for (let args of work.calls) {
+    alert( 'call:' + args.join() ); // "call:1,2", "call:4,5"
+  }
+
+    let collect = new Map();
+    collect.set("1,2", [1,2]);
+    collect.set("3,4", [3,4]) 
+    collect.set("5,6", [5,6])  */
+
+/*     for(let args of collect.keys()) {
+        console.log('call:' + args);
+    } */
